@@ -75,7 +75,7 @@ void loop() {
   //  WriteNumberToSegment(1 , 1);
   //  WriteNumberToSegment(2 , 2);
   //  WriteNumberToSegment(3 , 3);
-  disp.write(145);
+  disp.write(4);
   disp.refresh();
 }
 

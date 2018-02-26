@@ -19,11 +19,12 @@ MyDisplay::MyDisplay()
 
 void MyDisplay::write(u8 val)
 {
-	
 	vram[0] = val %10;
 	vram[1] = (val/10) %10;
 	vram[2] = (val/100) %10;
 	vram[3] = (val/1000) %10;
+	
+	replace_zeros_on_left(3);
 }
 
 void MyDisplay::refresh()
@@ -66,4 +67,16 @@ void MyDisplay::WriteValueToSegment(byte Segment, byte Value)
   }
 
   bitSet(PORTD, 4);
+}
+
+void MyDisplay::replace_zeros_on_left(u8 idx)
+{
+	if (idx > 0 && idx < 4) //only for valid segments
+	{
+		if (vram[idx] == 0)
+		{
+			vram[idx] = blank_idx;
+			replace_zeros_on_left(idx-1);
+		}
+	}
 }

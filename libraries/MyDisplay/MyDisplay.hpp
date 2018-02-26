@@ -17,5 +17,6 @@ class MyDisplay
 	private:
 		void WriteNumberToSegment(byte Segment, byte Value);
 		void WriteValueToSegment(byte Segment, byte Value);
+		void replace_zeros_on_left(u8 idx);
 		
 } ;
