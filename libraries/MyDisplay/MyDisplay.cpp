@@ -17,14 +17,14 @@ MyDisplay::MyDisplay()
 	vram[3] = blank_idx ;
 }
 
-void MyDisplay::write(u8 val)
+void MyDisplay::print(u16 val)
 {
 	vram[0] = val %10;
 	vram[1] = (val/10) %10;
 	vram[2] = (val/100) %10;
 	vram[3] = (val/1000) %10;
 	
-	replace_zeros_on_left(3);
+	replace_zeros_on_left(3); //starting from the MSB (segment 3)
 }
 
 void MyDisplay::refresh()

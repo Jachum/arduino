@@ -9,10 +9,10 @@ const int led_3 = 11;
 const int led_4 = 10;
 
 const u32 SECOND_IN_US = 60 * 1000000;
+u32 tempo = 120; //bpm
+bool is_tick = false;
 
 #define BUZZER_DIO 3
-
-
 
 bool light = LOW;
 byte value = 0;
@@ -29,15 +29,13 @@ void setup() {
   //serial
   Serial.begin(9600);
 
-
-
   //buzzer
   pinMode(BUZZER_DIO, OUTPUT);
   digitalWrite(BUZZER_DIO, HIGH);
   //play_music();
 
   //timer
-  Timer1.initialize(interval);
+  Timer1.initialize(bpm2us(tempo));
   Timer1.attachInterrupt(timer_cb);
   //Timer1.stop();
   Timer1.start();
@@ -75,8 +73,18 @@ void loop() {
   //  WriteNumberToSegment(1 , 1);
   //  WriteNumberToSegment(2 , 2);
   //  WriteNumberToSegment(3 , 3);
-  disp.write(4);
+  disp.print(5678);
   disp.refresh();
+  //delayMicroseconds(10000);
+  
+  if (is_tick)
+  {
+    //digitalWrite(BUZZER_DIO, LOW);
+  }
+  else
+  {
+    digitalWrite(BUZZER_DIO, HIGH);
+  }
 }
 
 
@@ -95,7 +103,13 @@ void play_music()
 void timer_cb()
 {
   light = !light;
-  digitalWrite(led_1, light);  
+  digitalWrite(led_1, light);
+
+  //digitalWrite(BUZZER_DIO, LOW);
+  //delay(100);
+  //delayMicroseconds(10000);
+  //digitalWrite(BUZZER_DIO, HIGH);
+  is_tick = !is_tick;
 }
 
 u32 bpm2us(u32 bpm)
@@ -103,3 +117,12 @@ u32 bpm2us(u32 bpm)
   return SECOND_IN_US / bpm;
 }
 
+u32 bpm2ms(u32 bpm)
+{
+  return bpm2us(bpm) / 1000;
+}
+
+u32 bpm2s(u32 bpm)
+{
+  return bpm2ms(bpm) / 1000;
+}
