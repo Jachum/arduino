@@ -2,6 +2,7 @@
 
 #include <TimerOne.h>
 #include <MyDisplay.hpp>
+#include <MyDigitalButton.hpp>
 //#include <Wire.h>
 
 #define BUZZER_DIO 3

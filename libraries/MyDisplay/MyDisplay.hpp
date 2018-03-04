@@ -1,7 +1,5 @@
 #include "Arduino.h"
 
-
-
 class MyDisplay
 {
 	byte vram[4]; 
