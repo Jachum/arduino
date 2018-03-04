@@ -12,19 +12,15 @@ const u8 led_1 = 13;
 const u8 led_2 = 12;
 const u8 led_3 = 11;
 const u8 led_4 = 10;
-const u32 sig_length = 50; //us, treat it as volume? 50000 seems ok.
+const u32 sig_length = 30000; //us, treat it as volume? 50000 seems ok.
 
 const u32 SECOND_IN_US = 60 * 1000000;
 u16 tempo = 120; //bpm
 volatile bool light1  = LOW;
 volatile bool light2  = LOW;
-u8 btn1_press   = 0;
-u8 btn1_release = 0;
-u8 btn2_press   = 0;
-u8 btn2_release = 0;
-u8 btn3_press   = 0;
-u8 btn3_release = 0;
-const u8 bounce_time  = 64;
+MyDigitalButton btn1(A1, LOW); //down
+MyDigitalButton btn2(A2, LOW); //up
+MyDigitalButton btn3(A3, LOW); //reset
 MyDisplay disp;
 
 void setup() {
@@ -56,40 +52,17 @@ void loop() {
   // Serial.print("Potentiometer reading: ");
   // Serial.println(pot_value);
 
-  bool button1 = digitalRead(A1);
-  if (button1 == LOW)
+  if (btn1.is_pressed())
   {
-    btn1_press++;
-    btn1_release = 0;
-    if (btn1_press >= bounce_time)
-    {
-      tempo--;
-      btn1_press = 0;
-    }
-  }
-  else
-  {
-    btn1_release++;
-    if (btn1_release >= bounce_time)
-    {
-      btn1_press = 0;
-    }
-
+    tempo--;
   }
 
-  bool button2 = digitalRead(A2);
-  if (button2 == LOW)
+  if (btn2 == LOW)
   {
-    btn2_press++;
-    if (btn2_press >= bounce_time)
-    {
       tempo++;
-      btn2_press = 0;
-    }
   }
 
-  bool button3 = digitalRead(A3);
-  if (button3 == LOW)
+  if (btn3 == LOW)
   {
     tempo = 120;
   }

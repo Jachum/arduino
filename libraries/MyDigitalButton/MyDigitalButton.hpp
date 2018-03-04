@@ -7,7 +7,14 @@ class MyDigitalButton
 		bool is_pressed();
 		bool operator==(const bool& rhs)
 		    {
-				rhs == is_pressed();
+				if (is_pressed())
+				{
+					return rhs == logic;
+				}
+				else
+				{
+					return rhs != logic;
+				}
 		    }
 		bool operator!=(const bool& rhs){ return !(*this == rhs); }
 

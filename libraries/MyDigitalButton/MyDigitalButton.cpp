@@ -23,4 +23,6 @@ bool MyDigitalButton::is_pressed()
 	      press = 0;
 	    }
 	  }
+
+	  return result;
 }
