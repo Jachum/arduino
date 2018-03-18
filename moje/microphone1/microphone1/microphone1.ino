@@ -3,22 +3,23 @@
 const u8  led_1 = 13;
 
 /*
- * To get fs=20kHz we need T=1/f => T=0.00005s => T=50us
- * @16MHz clock we've got a tick every 0.0625 us. This gives us
- * 800 ticks between every interrupt.
- */
+   To get fs=20kHz we need T=1/f => T=0.00005s => T=50us
+   @16MHz clock we've got a tick every 0.0625 us. This gives us
+   800 ticks between every interrupt.
+*/
 
 const u16 interval = 50; //50us->800ticks, 100->1600ticks
 
 volatile bool light1  = HIGH;
 volatile u16 sample  = 0;
+volatile bool new_sample  = false;
 
-void setup() 
+void setup()
 {
   pinMode(led_1, OUTPUT);
   pinMode(A0, INPUT);
-  
-  Serial.begin(9600);
+
+  //Serial.begin(9600);
 
   //timer
   Timer1.initialize(interval);
@@ -27,16 +28,33 @@ void setup()
   Timer1.start();
 }
 
-void loop() 
+void loop()
 {
-   //Serial.print("Potentiometer reading: ");
-   //Serial.println(sample);
+  const u16 zero = 512;
+  const u16 thr = 300;
+  const u16 thresholdUp = zero + thr;
+  const u16 thresholdDwn = zero - thr;
+  //Serial.print("Potentiometer reading: ");
+  //Serial.println(sample);
+
+  if (new_sample)
+  {
+    const u16 level = sample;
+    if (level > thresholdUp || level < thresholdDwn)
+    {
+      light1 = !light1;
+      digitalWrite(led_1, light1);
+    }
+  }
+
 }
+
+
 
 
 void timer_cb()
 {
-  light1 = !light1;
-  digitalWrite(led_1, light1);
   sample = analogRead(A0);
+  new_sample = true;
+  //Serial.println(sample);
 }
