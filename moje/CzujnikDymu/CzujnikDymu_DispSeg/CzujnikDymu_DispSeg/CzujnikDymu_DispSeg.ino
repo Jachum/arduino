@@ -4,8 +4,9 @@
   http://wemakers.tistory.com  
     
 */
+#include <MyDisplay.hpp>
 #include <SoftwareSerial.h> 
- #define DEBUG  
+// #define DEBUG  
 #define  MEAN_NUMBER  10
 #define  MAX_PM   0
 #define  MIN_PM   32767
@@ -22,6 +23,7 @@ unsigned int pm1_0=0, pm2_5=0, pm10_0=0;
 unsigned int tmp_max_pm1_0, tmp_max_pm2_5, tmp_max_pm10_0; 
 unsigned int tmp_min_pm1_0, tmp_min_pm2_5, tmp_min_pm10_0; 
 byte i=0;
+MyDisplay disp;
 
 struct PMS7003_framestruct {
     byte  frameHeader[2];
@@ -33,8 +35,10 @@ struct PMS7003_framestruct {
 } thisFrame;
 
 void setup() {
+    disp.print(8888);
+    disp.refresh();
+    
     Serial.begin(57600);
-    //Serial.begin(9600);
     delay(1000);
     Serial.println("-- Initializing...");
 }
@@ -48,6 +52,7 @@ bool pms7003_read() {
     bool packetReceived = false;
     calcChecksum = 0;
     while (!packetReceived) {
+        disp.refresh();
         if (Serial1.available() > 32) {
             int drain = Serial1.available();
 #ifdef DEBUG
@@ -172,7 +177,13 @@ void loop () {
     tmp_min_pm1_0, tmp_min_pm2_5, tmp_min_pm10_0);  
   Serial.println();
   Serial.println(printbuf);
+
+  u16 value_to_display = (pm2_5-tmp_max_pm2_5-tmp_min_pm2_5)/(MEAN_NUMBER-2); 
+  disp.print(value_to_display);
+ 
   pm1_0=pm2_5=pm10_0=i=0;
 //  delay(20000);
   }
+  
+  //disp.refresh();
 }
